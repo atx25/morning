@@ -1,0 +1,28 @@
+yaml
+name: Send morning quote
+on:
+  schedule:
+    - cron: '0 8 * * *'
+ jobs:
+  send_morning_quote:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: 3.9
+    - name: Install dependencies
+      run: pip install -r requirements.txt
+    - name: Send morning quote email
+      env:
+        CITY: ${{ secrets.CITY }}
+        HE_WEATHER_KEY: ${{ secrets.HE_WEATHER_KEY }}
+        SMTP_SERVER: ${{ secrets.SMTP_SERVER }}
+        SMTP_PORT: ${{ secrets.SMTP_PORT }}
+        SMTP_USER: ${{ secrets.SMTP_USER }}
+        SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+        EMAIL_FROM: ${{ secrets.EMAIL_FROM }}
+        EMAIL_TO: ${{ secrets.EMAIL_TO }}
+      run: python main.py
